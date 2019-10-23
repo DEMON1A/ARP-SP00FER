@@ -6,7 +6,7 @@ print("\t\t\t\t\t[+] << ARP-SP00F (MITM) >> [+]")
 
 target_ip = input("\nTarget IP >> ")
 network_ip = input("Network IP >> ")
-send_packets = str(0)
+send_packets = 0
 
 def MAC_SCAN(ip):
 	arp = scapy.ARP(pdst=ip)
