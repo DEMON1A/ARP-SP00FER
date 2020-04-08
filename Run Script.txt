@@ -1,7 +1,0 @@
-1: git clone https://www.github.com/DEMON1A/ARP-SP00FER
-2: cd ARP-SP00FER
-3: python3 ARP-SPOOF.py
------------------------------
-1: Enter Target ip and network scanner will get his MAC Address
-2: Enter Network ip Address
-3: This Script will send packets
